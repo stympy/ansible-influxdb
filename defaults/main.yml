@@ -1,0 +1,4 @@
+influxdb:
+  version: 0.5.4
+  seed_servers: [ ]
+  replication_factor: 1
