@@ -36,7 +36,7 @@ port     = 8086    # binding is disabled if the port isn't set
 # The raft port should be open between all servers in a cluster.
 # However, this port shouldn't be accessible from the internet.
 
-port = 8090
+port = {{influxdb.raft_port}}
 
 # Where the raft logs are stored. The user running InfluxDB will need read/write access.
 dir  = "/opt/influxdb/shared/data/raft"
