@@ -1,2 +1,6 @@
 - name: restart influxdb
   service: name=influxdb state=restarted
+
+- name: wait for raft port
+  wait_for: port={{influxdb.raft_port}} state=started
+
