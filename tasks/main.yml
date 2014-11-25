@@ -20,5 +20,5 @@
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
   notify:
     - restart influxdb
-    - wait for raft port
+    - wait for influxdb port
     
