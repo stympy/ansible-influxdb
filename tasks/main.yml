@@ -22,3 +22,9 @@
     - restart influxdb
     - wait for influxdb port
     
+- name: Copy ssl key
+  copy: dest={{influxdb_ssl_certificate}} src={{influxdb_ssl_certificate_src}} owner=influxdb group=root mode=0440
+  when: influxdb_ssl_certificate_src is defined
+  notify:
+    - restart influxdb
+    - wait for influxdb port
