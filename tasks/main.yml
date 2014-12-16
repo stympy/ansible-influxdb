@@ -20,11 +20,18 @@
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
   notify:
     - restart influxdb
-    - wait for influxdb port
     
 - name: Copy ssl key
   copy: dest={{influxdb_ssl_certificate}} src={{influxdb_ssl_certificate_src}} owner=influxdb group=root mode=0440
   when: influxdb_ssl_certificate_src is defined
   notify:
     - restart influxdb
-    - wait for influxdb port
+
+- meta: flush_handlers
+
+- name: Enable influxdb
+  service: name=influxdb state=started enabled=yes
+
+- name: wait for influxdb port
+  wait_for: port={{influxdb_client_port}} state=started timeout=30
+
