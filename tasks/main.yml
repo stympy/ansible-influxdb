@@ -12,16 +12,6 @@
   changed_when: "dpkg_result.stdout.startswith('Selecting')"
   when: not influxdb_use_apt
 
-- name: Check for ip address in config file
-  command: grep -E '^\s*hostname.*{{ ansible_default_ipv4.address }}' /opt/influxdb/shared/config.toml
-  register: config_has_ip
-  ignore_errors: true
-  changed_when: false
-
-- name: Delete raft dir before hostname change
-  file: dest=/opt/influxdb/shared/data/raft state=absent
-  when: config_has_ip|failed
-
 - name: Update config
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
   notify:
