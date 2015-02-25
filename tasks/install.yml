@@ -1,0 +1,13 @@
+- name: apt install influxdb
+  apt: name=influxdb
+  when: influxdb_use_apt
+
+- name: Fetch package
+  get_url: url={{influxdb_deb_src_url}}/influxdb_{{ influxdb.version }}_amd64.deb dest=/usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
+  when: not influxdb_use_apt
+
+- name: Install package
+  command: dpkg --skip-same-version -i /usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
+  register: dpkg_result
+  changed_when: "dpkg_result.stdout.startswith('Selecting')"
+  when: not influxdb_use_apt
