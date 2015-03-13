@@ -3,13 +3,13 @@
 
 - name: Update config (0.8.x)
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
-  when: influxdb.version|search("0\.8\..*")
+  when: influxdb.version|version_compare('0.9', '<=')
   notify:
     - restart influxdb
 
 - name: Update config (0.9.x)
   template: src=influxdb.conf dest=/etc/opt/influxdb/influxdb.conf
-  when: influxdb.version|search("0\.9\..*")
+  when: influxdb.version|version_compare('0.9', '>=')
   notify:
     - restart influxdb
     
