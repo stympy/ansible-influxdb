@@ -1,8 +1,15 @@
 - include: install.yml
   when: not skip_install
 
-- name: Update config
+- name: Update config (0.8.x)
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
+  when: influxdb_version|version_compare('0.9', '<')
+  notify:
+    - restart influxdb
+
+- name: Update config (0.9.x)
+  template: src=influxdb.conf dest=/etc/opt/influxdb/influxdb.conf
+  when: influxdb_version|version_compare('0.9', '>=')
   notify:
     - restart influxdb
     
