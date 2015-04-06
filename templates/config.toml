@@ -3,9 +3,9 @@
 # If hostname (on the OS) doesn't return a name that can be resolved by the other
 # systems in the cluster, you'll have to set the hostname to an IP or something
 # that can be resolved here.
-hostname = "{{ ansible_default_ipv4.address }}"
+hostname = "{{ influxdb_hostname }}"
 
-bind-address = "0.0.0.0"
+bind-address = "{{ influxdb_bind_address }}"
 
 [logging]
 # logging level can be one of "debug", "info", "warn" or "error"
@@ -19,9 +19,12 @@ assets = "/opt/influxdb/current/admin"
 
 # Configure the http api
 [api]
+{% if influxdb_ssl_certificate is defined %}
+ssl-port = {{influxdb_client_port}}    # Ssl support is enabled if you set a port and cert
+ssl-cert = "{{influxdb_ssl_certificate}}"
+{% else %}
 port     = {{influxdb_client_port}}    # binding is disabled if the port isn't set
-# ssl-port = 8084    # Ssl support is enabled if you set a port and cert
-# ssl-cert = /path/to/cert.pem
+{% endif %}
 
 [input_plugins]
 

@@ -1,24 +1,49 @@
-- name: Fetch package
-  get_url: url=http://s3.amazonaws.com/influxdb/influxdb_{{ influxdb.version }}_amd64.deb dest=/usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
+- include: install.yml
+  when: not skip_install
 
-- name: Install package
-  command: dpkg --skip-same-version -i /usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
-  register: dpkg_result
-  changed_when: "dpkg_result.stdout.startswith('Selecting')"
-
-- name: Check for ip address in config file
-  command: grep -E '^\s*hostname.*{{ ansible_default_ipv4.address }}' /opt/influxdb/shared/config.toml
-  register: config_has_ip
-  ignore_errors: true
-  changed_when: false
-
-- name: Delete raft dir before hostname change
-  file: dest=/opt/influxdb/shared/data/raft state=absent
-  when: config_has_ip|failed
-
-- name: Update config
+- name: Update config (0.8.x)
   template: src=config.toml dest=/opt/influxdb/shared/config.toml
+  when: influxdb_version|version_compare('0.9', '<')
   notify:
     - restart influxdb
-    - wait for influxdb port
+
+- name: Update config (0.9.x)
+  template: src=influxdb.conf dest=/etc/opt/influxdb/influxdb.conf
+  when: influxdb_version|version_compare('0.9', '>=')
+  notify:
+    - restart influxdb
     
+- name: Copy ssl key
+  copy: dest={{influxdb_ssl_certificate}} src={{influxdb_ssl_certificate_src}} owner=influxdb group=root mode=0440
+  when: influxdb_ssl_certificate_src is defined
+  notify:
+    - restart influxdb
+
+- name: Detect if this is a systemd based system
+  command: cat /proc/1/comm
+  register: init
+- set_fact: use_systemd=True
+  when: init.stdout == 'systemd'
+- set_fact: use_systemd=False
+  when: init.stdout != 'systemd'
+
+- name: Enable influxdb
+  service: name=influxdb state=started enabled=yes
+
+- command: systemctl daemon-reload
+  when: use_systemd
+
+- meta: flush_handlers
+
+- name: wait for influxdb port
+  wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
+  ignore_errors: yes
+  register: first_wait
+
+- name: restart if clustering failed to connect
+  service: name=influxdb state=restarted
+  when: first_wait|failed
+
+- name: 2nd wait for influxdb port
+  wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
+  when: first_wait|failed

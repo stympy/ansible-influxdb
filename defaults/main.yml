@@ -1,6 +1,15 @@
 influxdb:
-  version: 0.5.4
   raft_port: 8090
   seed_servers: [ ]
   replication_factor: 1
+
 influxdb_client_port: 8086
+influxdb_hostname: "{{ ansible_default_ipv4.address }}"
+influxdb_bind_address: 0.0.0.0
+influxdb_version: 0.8.8
+
+influxdb_use_apt: false
+# Url to find the influxdb deb, the deb name/version is appended, only used if not using apt
+influxdb_deb_src_url: http://s3.amazonaws.com/influxdb
+
+skip_install: False
