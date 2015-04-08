@@ -27,11 +27,11 @@
 - set_fact: use_systemd=False
   when: init.stdout != 'systemd'
 
-- name: Enable influxdb
-  service: name=influxdb state=started enabled=yes
-
 - command: systemctl daemon-reload
   when: use_systemd
+
+- name: Enable influxdb
+  service: name=influxdb state=started enabled=yes
 
 - meta: flush_handlers
 
