@@ -39,11 +39,3 @@
   wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
   ignore_errors: yes
   register: first_wait
-
-- name: restart if clustering failed to connect
-  service: name=influxdb state=restarted
-  when: first_wait|failed
-
-- name: 2nd wait for influxdb port
-  wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
-  when: first_wait|failed
