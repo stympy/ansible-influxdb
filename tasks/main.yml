@@ -30,10 +30,10 @@
 - command: systemctl daemon-reload
   when: use_systemd
 
+- meta: flush_handlers
+
 - name: Enable influxdb
   service: name=influxdb state=started enabled=yes
-
-- meta: flush_handlers
 
 - name: wait for influxdb port
   wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
