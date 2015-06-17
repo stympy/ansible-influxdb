@@ -3,7 +3,11 @@
   when: influxdb_use_apt
 
 - name: Fetch package
-  get_url: url={{influxdb_deb_src_url}}/influxdb_{{ influxdb_version }}_amd64.deb dest=/usr/local/src/influxdb_{{ influxdb_version }}_amd64.deb
+  get_url: url={{influxdb_deb_src_url}}/influxdb_{{ influxdb_version }}_amd64.deb dest=/usr/local/src/influxdb_{{ influxdb_version }}_amd64.deb timeout=30
+  register: get_url_result
+  until: "'OK' in get_url_result.msg"
+  retries: 5
+  delay: 1
   when: not influxdb_use_apt
 
 - name: Install package
