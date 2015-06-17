@@ -1,41 +1,12 @@
+---
+- include: stop.yml
+  when:  run_mode == 'Stop'
+
 - include: install.yml
-  when: not skip_install
+  when: not skip_install and ( run_mode == 'Install' or run_mode == 'Deploy' )
 
-- name: Update config (0.8.x)
-  template: src=config.toml dest=/opt/influxdb/shared/config.toml
-  when: influxdb_version|version_compare('0.9', '<')
-  notify:
-    - restart influxdb
+- include: configure.yml
+  when:  run_mode == 'Configure' or run_mode == 'Deploy'
 
-- name: Update config (0.9.x)
-  template: src=influxdb.conf dest=/etc/opt/influxdb/influxdb.conf
-  when: influxdb_version|version_compare('0.9', '>=')
-  notify:
-    - restart influxdb
-
-- name: Copy ssl key
-  copy: dest={{influxdb_ssl_certificate}} src={{influxdb_ssl_certificate_src}} owner=influxdb group=root mode=0440
-  when: influxdb_ssl_certificate_src is defined
-  notify:
-    - restart influxdb
-
-- name: Detect if this is a systemd based system
-  command: cat /proc/1/comm
-  register: init
-- set_fact: use_systemd=True
-  when: init.stdout == 'systemd'
-- set_fact: use_systemd=False
-  when: init.stdout != 'systemd'
-
-- command: systemctl daemon-reload
-  when: use_systemd
-
-- meta: flush_handlers
-
-- name: Enable influxdb
-  service: name=influxdb state=started enabled=yes
-
-- name: wait for influxdb port
-  wait_for: port={{influxdb_client_port}} host={{influxdb_bind_address |replace('0.0.0.0', '127.0.0.1')}} state=started timeout=30
-  ignore_errors: yes
-  register: first_wait
+- include: start.yml
+  when:  run_mode == 'Start' or run_mode == 'Deploy'
