@@ -1,3 +1,4 @@
+---
 - name: apt install influxdb
   apt: name=influxdb
   when: influxdb_use_apt

@@ -16,6 +16,10 @@ Install [InfluxDB](http://influxdb.org/) time series database
 | influxdb_use_apt            | false         | If true apt will be used to install influxdb                     |
 | influxdb_deb_src_url        | http://s3.amazonaws.com/influxdb/ | If not using apt the url base to pull the deb from |
 
+
+##Optional
+- run_mode - One of Deploy, Stop, Install, Start, or Use. The default is Deploy which will do Install, Configure, then Start. 
+
 ### Clustering
 For influxdb 0.8.x `influxdb.seed_servers` is a list of `host:port` entries that should be set on the follower nodes.
 For influxdb 0.9.x `influxdb.join_urls` is a list of `http://host:port` entries that should be set on the follower nodes.
