@@ -18,8 +18,12 @@ reporting-disabled = false
 [meta]
   dir = "/var/opt/influxdb/meta"
   hostname = "{{ influxdb_hostname }}"
-  bind-address = "{{ influxdb_bind_address | default('') }}:8088"
+  bind-address = "{{ influxdb_bind_address | default('') }}:{{ influxdb_raft_port }}"
   retention-autocreate = true
+{% if influxdb_peers is defined %}
+  # Each host:port entry must be quoted
+  peers = {{ influxdb_peers }}
+{% endif %}
   election-timeout = "1s"
   heartbeat-timeout = "1s"
   leader-lease-timeout = "500ms"

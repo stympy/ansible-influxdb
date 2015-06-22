@@ -17,7 +17,8 @@ Install [InfluxDB](http://influxdb.org/) time series database
 - run_mode - One of Deploy, Stop, Install, Start, or Use. The default is Deploy which will do Install, Configure, then Start. 
 
 ### Clustering
-`influxdb.join_urls` is a list of `http://host:port` entries that should be set on the follower nodes.
+To enable clustering define `influxdb_peers` on all nodes.
+`influxdb_peers` is a list of `host:port` entries, one for each node.
 
 ## License
 
