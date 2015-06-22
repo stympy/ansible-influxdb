@@ -1,8 +1,3 @@
-influxdb:
-  raft_port: 8090
-  seed_servers: [ ]
-  replication_factor: 1
-
 influxdb_client_port: 8086
 influxdb_hostname: "{{ ansible_default_ipv4.address }}"
 

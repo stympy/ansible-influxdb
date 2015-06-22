@@ -4,12 +4,8 @@ Install [InfluxDB](http://influxdb.org/) time series database
 
 ## Role Variables
 
-`defaults/main.yml`
-
 | Name                        | Default Value | Description                                                      |
 |-----------------------------|---------------|------------------------------------------------------------------|
-| influxdb.raft_port          | [8090]        | Port used for raft                                               |
-| influxdb.replication_factor | 1             | How many servers in the cluster should have a copy of each shard |
 | influxdb_client_port        | 8086          | The port for influxdb client connections                         |
 | influxdb_ssl_certificate    | None          | If defined the influxdb_client_port will be set to SSL           |
 | influxdb_ssl_certificate_src| None          | If defined the file at this location wil be copied to the host   |
@@ -21,8 +17,7 @@ Install [InfluxDB](http://influxdb.org/) time series database
 - run_mode - One of Deploy, Stop, Install, Start, or Use. The default is Deploy which will do Install, Configure, then Start. 
 
 ### Clustering
-For influxdb 0.8.x `influxdb.seed_servers` is a list of `host:port` entries that should be set on the follower nodes.
-For influxdb 0.9.x `influxdb.join_urls` is a list of `http://host:port` entries that should be set on the follower nodes.
+`influxdb.join_urls` is a list of `http://host:port` entries that should be set on the follower nodes.
 
 ## License
 
