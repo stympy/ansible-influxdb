@@ -20,7 +20,7 @@ reporting-disabled = false
   hostname = "{{ influxdb_hostname }}"
   bind-address = "{{ influxdb_bind_address | default('') }}:{{ influxdb_raft_port }}"
   retention-autocreate = true
-{% if influxdb_peers is defined %}
+{% if influxdb_peers is defined and (influxdb_peers|length) > 1 %}
   # Each host:port entry must be quoted
   peers = {{ influxdb_peers }}
 {% endif %}
