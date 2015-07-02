@@ -18,7 +18,7 @@ Install [InfluxDB](http://influxdb.org/) time series database
 
 
 ##Optional
-- run_mode - One of Deploy, Stop, Install, Start, or Use. The default is Deploy which will do Install, Configure, then Start. 
+- run_mode - One of Deploy, Stop, Install, Start, or Use. The default is Deploy which will do Install, Configure, then Start.
 
 ### Clustering
 For influxdb 0.8.x `influxdb.seed_servers` is a list of `host:port` entries that should be set on the follower nodes.
