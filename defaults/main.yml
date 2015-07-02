@@ -5,7 +5,7 @@ influxdb_hostname: "{{ ansible_default_ipv4.address }}"
 influxdb_use_apt: false
 # Url to find the influxdb deb, the deb name/version is appended, only used if not using apt
 influxdb_deb_src_url: http://s3.amazonaws.com/influxdb
-influxdb_version: 0.9.0
+influxdb_version: 0.9.1
 
 run_mode: Deploy
 skip_install: False
