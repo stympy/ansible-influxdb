@@ -66,7 +66,7 @@ reporting-disabled = false
 
 [admin]
   enabled = true
-  bind-address = ":8083"
+  bind-address = "{{ influxdb_bind_address | default('') }}:8083"
 
 ###
 ### [http]
@@ -77,7 +77,7 @@ reporting-disabled = false
 
 [http]
   enabled = true
-  bind-address = ":{{ influxdb_client_port }}"
+  bind-address = "{{ influxdb_bind_address | default('') }}:{{ influxdb_client_port }}"
   auth-enabled = false
   log-enabled = true
   write-tracing = false
@@ -91,7 +91,7 @@ reporting-disabled = false
 
 [[graphite]]
   enabled = false
-  # bind-address = ":2003"
+  # bind-address = "{{ influxdb_bind_address | default('') }}:2003"
   # protocol = "tcp"
   # consistency-level = "one"
   # name-separator = "."
