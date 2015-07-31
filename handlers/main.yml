@@ -1,2 +1,7 @@
+---
 - name: restart influxdb
   service: name=influxdb state=restarted
+
+- name: monasca_influxdb_config_change
+  set_fact:
+    monasca_influxdb_restart_required: true

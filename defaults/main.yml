@@ -9,3 +9,6 @@ influxdb_version: 0.9.1
 
 run_mode: Deploy
 skip_install: False
+
+# flag to track restart requirement during reconfigure
+monasca_influxdb_restart_required: false

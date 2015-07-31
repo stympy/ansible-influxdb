@@ -4,12 +4,14 @@
   when: influxdb_version|version_compare('0.9', '>=')
   notify:
     - restart influxdb
+    - monasca_influxdb_config_change
 
 - name: Copy ssl key
   copy: dest={{influxdb_ssl_certificate}} src={{influxdb_ssl_certificate_src}} owner=influxdb group=root mode=0440
   when: influxdb_ssl_certificate_src is defined
   notify:
     - restart influxdb
+    - monasca_influxdb_config_change
 
 - name: Detect if this is a systemd based system
   command: cat /proc/1/comm
