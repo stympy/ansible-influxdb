@@ -1,6 +1,7 @@
+---
 - name: restart influxdb
   service: name=influxdb state=restarted
 
-- name: wait for influxdb port
-  wait_for: port={{influxdb_client_port}} state=started
-
+- name: monasca_influxdb_config_change
+  set_fact:
+    monasca_influxdb_restart_required: true
