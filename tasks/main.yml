@@ -1,24 +1,12 @@
-- name: Fetch package
-  get_url: url=http://s3.amazonaws.com/influxdb/influxdb_{{ influxdb.version }}_amd64.deb dest=/usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
+---
+- include: stop.yml
+  when: run_mode == 'Stop'
 
-- name: Install package
-  command: dpkg --skip-same-version -i /usr/local/src/influxdb_{{ influxdb.version }}_amd64.deb
-  register: dpkg_result
-  changed_when: "dpkg_result.stdout.startswith('Selecting')"
+- include: install.yml
+  when: not skip_install and ( run_mode == 'Install' or run_mode == 'Deploy' )
 
-- name: Check for ip address in config file
-  command: grep -E '^\s*hostname.*{{ ansible_default_ipv4.address }}' /opt/influxdb/shared/config.toml
-  register: config_has_ip
-  ignore_errors: true
-  changed_when: false
+- include: configure.yml
+  when: run_mode == 'Configure' or run_mode == 'Deploy'
 
-- name: Delete raft dir before hostname change
-  file: dest=/opt/influxdb/shared/data/raft state=absent
-  when: config_has_ip|failed
-
-- name: Update config
-  template: src=config.toml dest=/opt/influxdb/shared/config.toml
-  notify:
-    - restart influxdb
-    - wait for influxdb port
-    
+- include: start.yml
+  when: run_mode == 'Start' or run_mode == 'Deploy'

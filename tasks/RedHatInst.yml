@@ -1,0 +1,13 @@
+- name: Create download directory
+  file: path="{{ download_tmp_dir }}" state=directory recurse=yes
+
+- name: Fetch package
+  get_url: url={{influxdb_deb_src_url}}/influxdb-{{ influxdb_version }}.x86_64.rpm
+           dest={{ download_tmp_dir }}/influxdb-{{ influxdb_version }}.x86_64.rpm
+  register: get_url_result
+  until: get_url_result.state == 'file'
+  retries: 5
+  delay: 1
+
+- name: Install package
+  yum: name="{{ download_tmp_dir }}"/influxdb-{{ influxdb_version }}.x86_64.rpm state=present

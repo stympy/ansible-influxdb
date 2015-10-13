@@ -1,0 +1,3 @@
+---
+- name: Stop influxdb
+  service: name=influxdb state=stopped
