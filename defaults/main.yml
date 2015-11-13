@@ -17,3 +17,5 @@ skip_install: False
 
 download_tmp_dir: "/opt/monasca_download_dir"
 influxdb_log_dir: "/var/log/influxdb"
+
+verify: True
