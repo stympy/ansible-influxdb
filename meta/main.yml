@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  author: Benjamin Curtis
-  description: Install InfluxDB Time Series Database
+  author: Tim Kuhlman
+  description: Install InfluxDB Time Series Database - Originally based on the version by Benjamin Curtis
   license: MIT
   min_ansible_version: 1.3
   platforms:
@@ -11,6 +11,10 @@ galaxy_info:
   - name: Debian
     versions:
     - all
+  - name: RedHat
+    versions:
+    - all
   categories:
   - database
   - database:nosql
+dependencies: []
